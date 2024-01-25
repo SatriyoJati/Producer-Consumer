@@ -3,36 +3,20 @@
 #include "freertos/task.h"
 #include "producer.h"
 
+#include "esp_log.h"
 
-struct Producer
-{
-    int message;
-    QueueHandle_t queue;
-};
+#define PRODUCER "Producer"
 
-Producer_Handle_t Producer_Create(QueueHandle_t queue)
-{
-    Producer_Handle_t instance = (Producer_Handle_t) malloc(1*sizeof(struct Producer)); 
-    if (instance == NULL)
-    {
-        printf("failed to create instance producer");
-    }
-    instance->queue = queue;
-    printf("Producer created");
-
-    return instance ;
-}
-
-void Producer_Destroy(Producer_Handle_t me)
-{
-    free(me);
+void attach_producer_to_queue(Producer * producer_intance,  QueueHandle_t queue){
+    producer_intance->queue = queue;
 }
 
 void Producer_Task ( void * args)
 {
-    Producer_Handle_t producerHandle = (Producer_Handle_t) args;
+    Producer * producerHandle = (Producer *) args;
+
     BaseType_t xStatus_send;
-    producerHandle -> message = 9;
+    producerHandle -> message_transmit = 9;
     const TickType_t xFrequency_send = pdMS_TO_TICKS(500);
     TickType_t xLastWakeTime = xTaskGetTickCount();
     BaseType_t xWasDelayed;
@@ -41,27 +25,28 @@ void Producer_Task ( void * args)
     {
         // vTaskDelayUntil(&xLastWakeTime, xFrequency_send);
 
-        printf("Test sender\n");
+        ESP_LOGI(PRODUCER, "Test sender\n");
         // vTaskDelay(pdMS_TO_TICKS(1000));
 
         xWasDelayed = xTaskDelayUntil(&xLastWakeTime, xFrequency_send);
 
         if (xWasDelayed == pdTRUE)
         {
-            printf("Yes it is delayed\n");
+            ESP_LOGI(PRODUCER,"Yes it is delayed\n");
         }
         else 
         {
-            printf("Sorry the delay doesnt work\n");
+            ESP_LOGE(PRODUCER,"Sorry the delay doesnt work\n");
         }
-        xStatus_send = xQueueSend(producerHandle->queue, &(producerHandle->message), 0);
+
+        xStatus_send = xQueueSend(producerHandle->queue, &(producerHandle->message_transmit), 0);
         if (xStatus_send == pdPASS)
         {
-            printf("success input to queue\n");
+            ESP_LOGI(PRODUCER,"success input to queue\n");
         }
         else if (xStatus_send == pdFAIL)
         {
-            printf("Queue is full\n");
+            ESP_LOGE(PRODUCER,"Queue is full\n");
         }
         
     }
