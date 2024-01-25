@@ -17,17 +17,24 @@ void app_main(void)
     }
     else
     {
-        printf("success created\n");
+        printf("queue success created\n");
     }
 
-    Producer_Handle_t myProducer = Producer_Create(Queue_Prod_Cons);
+    Producer myproducer = 
+    {
+        .message_transmit = 0,
+        .queue = NULL
+    };
+
+    attach_producer_to_queue(&myproducer, Queue_Prod_Cons);
+
     Consumer_Handle_t myConsumer = Consumer_Create(Queue_Prod_Cons);
 
 
     // printf("%p", myProducer);
     
-    xTaskCreate(Producer_Task, "Sender1", 2000, (void *) myProducer, 1, NULL);
-    xTaskCreate(Consumer_Task, "Receiver", 2000, (void *) myProducer, 1, NULL);
+    xTaskCreate(Producer_Task, "Sender1", 2000, (void *)&myproducer, 1, NULL);
+    xTaskCreate(Consumer_Task, "Receiver", 2000, (void *)&myproducer, 1, NULL);
 
     TickType_t xLastWakeTime;
     BaseType_t status;
@@ -36,7 +43,7 @@ void app_main(void)
         status = xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1000));
 
     }
+    printf("return?");
 
-    Producer_Destroy(myProducer);
     Consumer_Destroy(myConsumer);
 }
