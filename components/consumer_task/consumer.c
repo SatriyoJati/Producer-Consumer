@@ -19,7 +19,7 @@ Consumer_Handle_t Consumer_Create(QueueHandle_t queue)
         printf("failed to create instance consumer\n");
     }
     instance->queue = queue;
-    printf("Producer created");
+    printf("Consumer created\n");
     return instance;
 }
 
