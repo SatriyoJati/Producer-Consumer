@@ -5,19 +5,23 @@
 #include "consumer.h"
 #include "freertos/queue.h"
 
+#include "esp_log.h"
+
+#define TAG "Main"
+
 void app_main(void)
 {
-    printf("Starting the ide of thinking\n");
+    ESP_LOGI(TAG, "Starting the ide of thinking\n");
 
     QueueHandle_t Queue_Prod_Cons = xQueueCreate(10, sizeof(int));
 
     if (Queue_Prod_Cons == NULL)
     {
-        printf("queue not created\n");
+        ESP_LOGI(TAG,"queue not created\n");
     }
     else
     {
-        printf("queue success created\n");
+        ESP_LOGE(TAG,"queue success created\n");
     }
 
     Producer myproducer = 
@@ -43,7 +47,7 @@ void app_main(void)
         status = xTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1000));
 
     }
-    printf("return?");
+    ESP_LOGE(TAG,"return?");
 
     Consumer_Destroy(myConsumer);
 }
