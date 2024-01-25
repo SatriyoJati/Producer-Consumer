@@ -5,9 +5,13 @@
 #define PRODUCER_H
 
 
-typedef struct Producer* Producer_Handle_t;
-Producer_Handle_t Producer_Create(QueueHandle_t queue) ;
-void Producer_Destroy(Producer_Handle_t me) ;
+typedef struct producer {
+    int message_transmit;
+    QueueHandle_t queue;
+} Producer;
+
+void attach_producer_to_queue(Producer * producer_intance,  QueueHandle_t queue);
+
 void Producer_Task(void *args);
 
 #endif
