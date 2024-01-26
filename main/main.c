@@ -39,7 +39,6 @@ void app_main(void)
     attach_producer_to_queue(&myproducer, Queue_Prod_Cons);
     attach_consumer_to_queue(&myconsumer, Queue_Prod_Cons);
 
-    // printf("%p", myProducer);
     
     xTaskCreate(Producer_Task, "Sender1", 2000, (void *)&myproducer, 0, NULL);
     xTaskCreate(Consumer_Task, "Receiver", 2000, (void *)&myconsumer, 0, NULL);
