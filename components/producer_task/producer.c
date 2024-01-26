@@ -17,7 +17,7 @@ void Producer_Task ( void * args)
 
     BaseType_t xStatus_send;
     producerHandle -> message_transmit = 9;
-    const TickType_t xFrequency_send = pdMS_TO_TICKS(500);
+    const TickType_t xFrequency_send = pdMS_TO_TICKS(300);
     TickType_t xLastWakeTime = xTaskGetTickCount();
     BaseType_t xWasDelayed;
 
