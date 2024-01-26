@@ -4,10 +4,14 @@
 #ifndef CONSUMER_H
 #define CONSUMER_H
 
-typedef struct Consumer *Consumer_Handle_t;
+typedef struct consumer
+{
+    int receivedMessage;
+    QueueHandle_t queue;
+}Consumer;
 
-Consumer_Handle_t Consumer_Create(QueueHandle_t queue);
-void Consumer_Destroy(Consumer_Handle_t me) ;
+void attach_consumer_to_queue(Consumer * consumer , QueueHandle_t queue);
+
 void Consumer_Task(void *args);
 
 #endif
